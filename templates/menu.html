@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú</title>
+    <style>
+        body { font-family: Arial; background-color: #e4e8ec; }
+        .navbar {
+            background-color: #1b3a57;
+            color: white;
+            padding: 10px;
+        }
+        .navbar a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}">Inicio</a>
+        <a href="{{ url_for('producto') }}">Producto</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+
+    <div style="padding: 20px;">
+        <h2>Bienvenido {{ session["usuario"] }}</h2>
+        <p>Selecciona una opción del menú superior para continuar.</p>
+    </div>
+</body>
+</html>

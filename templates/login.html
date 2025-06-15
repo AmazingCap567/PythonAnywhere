@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+  <h2>Inicio de sesión</h2>
+  <form method="POST">
+    Usuario: <input type="text" name="usuario"><br>
+    Contraseña: <input type="password" name="contraseña"><br>
+    <input type="submit" value="Ingresar">
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>

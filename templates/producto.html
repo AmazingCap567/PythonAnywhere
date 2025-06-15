@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Producto</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e4e8ec;
+        }
+
+        .navbar {
+            background-color: #1b3a57;
+            color: white;
+            padding: 10px;
+        }
+
+            .navbar a {
+                color: white;
+                margin-right: 20px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white; 
+        }
+
+        th, td {
+            border: 1px solid #888;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2e6da4;
+            color: white;
+        }
+        .formulario {
+            background-color: white;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+
+            .formulario label {
+                display: inline-block;
+                width: 100px;
+                margin-top: 5px;
+            }
+
+            .formulario input, .formulario select {
+                width: 180px;
+                margin-top: 5px;
+            }
+        .boton-verde {
+            border: 2px solid green;
+            background-color: white;
+            color: green;
+            padding: 8px 16px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton-rojo {
+            border: 2px solid red;
+            background-color: white;
+            color: red;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}">Inicio</a>
+        <a href="{{ url_for('producto') }}">Producto</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+
+    <div style="padding: 20px;">
+        <h2>Administrar Productos</h2>
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>IVA</th>
+                <th>Categoría</th>
+            </tr>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>{{ producto.descripcion }}</td>
+                <td>{{ producto.iva }}</td>
+                <td>{{ producto.categoria }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <!-- Formulario -->
+    <div class="formulario">
+        <form>
+            <label>Nombre:</label>
+            <input type="text"><br>
+
+            <label>Cantidad:</label>
+            <input type="text"><br>
+
+            <label>Precio:</label>
+            <input type="text"><br>
+
+            <label>Descripción:</label>
+            <input type="text"><br>
+
+            <label>IVA:</label>
+            <select>
+                <option>Seleccione IVA</option>
+                <option>0.00</option>
+                <option>0.10</option>
+                <option>0.16</option>
+                <option>0.18</option>
+            </select><br>
+
+            <label>Categoría:</label>
+            <select>
+                <option>Seleccione categoría</option>
+                <option>bebidas</option>
+                <option>zapatos</option>
+                <option>vestimentas</option>
+                <option>equipos de computo</option>
+                <option>frutas</option>
+                <option>verduras</option>
+            </select><br><br>
+
+            <button class="boton-verde">Actualizar</button>
+            <button class="boton-rojo">Eliminar</button>
+        </form>
+    </div>
+
+</body>
+</html>
