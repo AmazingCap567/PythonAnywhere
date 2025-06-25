@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #e4e8ec;
+        }
+
+        .navbar {
+            background-color: #1b3a57;
+            padding: 10px 20px;
+            color: white;
+        }
+
+            .navbar a {
+                color: white;
+                margin-right: 20px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            color: black;
+            min-width: 220px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 10px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .submenu {
+            position: relative;
+        }
+
+            .submenu .dropdown-content {
+                top: 0;
+                left: 100%;
+                margin-left: 1px;
+            }
+
+        .disabled {
+            color: gray;
+            pointer-events: none;
+        }
+
+        .main-content {
+            padding: 30px 20px;
+        }
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}">Inicio</a>
+
+        <div class="dropdown">
+            <a href="#">Base de Datos</a>
+            <div class="dropdown-content">
+                <div class="dropdown submenu">
+                    <a href="#">Clientes ▶</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('agregar_cliente') }}">Agregar nuevo Cliente</a>
+                        <a href="{{ url_for('modificar_cliente') }}">Modificar Cliente</a>
+                        <a href="#" class="disabled">Eliminar</a>
+                        <a href="#">Consultar Clientes</a>
+                    </div>
+                </div>
+                <a href="#">Productos</a>
+                <a href="#">Usuarios</a>
+            </div>
+        </div>
+
+        <a href="{{ url_for('venta') }}">Venta</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

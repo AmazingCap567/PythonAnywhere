@@ -12,6 +12,7 @@
     <Name>PythonAnywhere</Name>
     <RootNamespace>PythonAnywhere</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,12 +29,18 @@
   <ItemGroup>
     <Folder Include="static\" />
     <Folder Include="templates\" />
+    <Folder Include="templates\Base_de_datos\" />
+    <Folder Include="templates\Base_de_datos\Clientes\" />
     <Folder Include="__pycache__\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="templates\base.html" />
+    <Content Include="templates\Base_de_datos\Clientes\AgregarClientes.html" />
+    <Content Include="templates\Base_de_datos\Clientes\ModificarClientes.html" />
+    <Content Include="templates\index.html" />
     <Content Include="templates\login.html" />
     <Content Include="templates\menu.html" />
-    <Content Include="templates\producto.html" />
+    <Content Include="templates\venta.html" />
     <Content Include="__pycache__\db.cpython-313.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

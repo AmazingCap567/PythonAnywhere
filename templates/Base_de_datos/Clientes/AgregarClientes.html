@@ -1,0 +1,107 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Agregar Cliente{% endblock %}
+
+{% block head %}
+<style>
+    .container {
+        width: 800px;
+        margin: 30px auto;
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px gray;
+    }
+
+    .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+    }
+
+        .form-row label {
+            width: 180px;
+            margin-right: 10px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .form-row input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .buttons {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .buttons button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    .accept {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .cancel {
+        background-color: #f44336;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 style="text-align:center;">Agregar Nuevo Cliente</h2>
+    <form method="post" action="#">
+        <div class="form-section">
+            <div class="form-row">
+                <label for="razon">Razón social:</label>
+                <input type="text" id="razon" name="razon">
+            </div>
+            <div class="form-row">
+                <label for="ruc">RUC:</label>
+                <input type="text" id="ruc" name="ruc">
+            </div>
+            <div class="form-row">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion">
+            </div>
+            <div class="form-row">
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono">
+            </div>
+            <div class="form-row">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre">
+            </div>
+            <div class="form-row">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos">
+            </div>
+            <div class="form-row">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo">
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="accept" type="submit">Aceptar</button>
+            <button class="cancel" type="button" onclick="window.history.back()">Cancelar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

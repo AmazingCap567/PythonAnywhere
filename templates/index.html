@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Ventas</title>
+</head>
+<body>
+    <h2>Registrar Nueva Venta</h2>
+    <form method="POST">
+        <label>Usuario:</label>
+        <select name="id_usuario">
+            {% for u in usuarios %}
+            <option value="{{ u[0] }}">{{ u[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Cliente:</label>
+        <select name="id_cliente">
+            {% for c in clientes %}
+            <option value="{{ c[0] }}">{{ c[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <h3>Productos:</h3>
+        {% for p in productos %}
+        <div>
+            <input type="checkbox" name="producto" value="{{ p[0] }}">
+            {{ p[1] }} (S/ {{ p[2] }})
+            <input type="number" name="cantidad" placeholder="Cantidad" min="1">
+            <input type="number" name="precio" placeholder="Precio" step="0.01" value="{{ p[2] }}">
+        </div>
+        {% endfor %}
+
+        <br><button type="submit">Registrar Venta</button>
+    </form>
+
+    <h2>Ventas Registradas</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Usuario</th>
+            <th>Cliente</th>
+        </tr>
+        {% for venta in ventas %}
+        <tr>
+            <td>{{ venta[0] }}</td>
+            <td>{{ venta[1] }}</td>
+            <td>S/ {{ venta[2] }}</td>
+            <td>{{ venta[3] }}</td>
+            <td>{{ venta[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+

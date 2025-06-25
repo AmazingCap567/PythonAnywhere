@@ -1,0 +1,125 @@
+﻿{% extends "base.html" %}
+{% block title %}Modificar Cliente{% endblock %}
+
+{% block head %}
+<meta charset="UTF-8">
+<style>
+    .container {
+        width: 800px;
+        margin: 30px auto;
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px gray;
+    }
+
+    .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+    }
+
+        .form-row label {
+            width: 180px;
+            font-weight: bold;
+        }
+
+        .form-row input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .buttons {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .buttons button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    .save {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .cancel {
+        background-color: #f44336;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 style="text-align:center;">Modificar Cliente</h2>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul style="color:green;">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('modificar_cliente') }}">
+        <div class="form-section">
+            <div class="form-row">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="{{ request.form.nombre or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" value="{{ request.form.apellidos or '' }}">
+            </div>
+            <div class="buttons">
+                <button type="submit" class="save">Buscar Cliente</button>
+            </div>
+
+            {% if cliente %}
+            <div id="campos-extra">
+                <div class="form-row">
+                    <label for="razon">Razón social:</label>
+                    <input type="text" name="razon" value="{{ cliente.razon_social }}">
+                </div>
+                <div class="form-row">
+                    <label for="ruc">RUC:</label>
+                    <input type="text" name="ruc" value="{{ cliente.ruc }}">
+                </div>
+                <div class="form-row">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" name="direccion" value="{{ cliente.direccion }}">
+                </div>
+                <div class="form-row">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" name="telefono" value="{{ cliente.telefono }}">
+                </div>
+                <div class="form-row">
+                    <label for="correo">Correo:</label>
+                    <input type="email" name="correo" value="{{ cliente.correo }}">
+                </div>
+
+                <div class="buttons">
+                    <button class="save" type="submit">Guardar cambios</button>
+                    <button class="cancel" type="button" onclick="window.history.back()">Cancelar</button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
