@@ -1,10 +1,7 @@
 ﻿from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_cors import CORS
 from db import conectar_bd
-import pyodbc
 from datetime import datetime
-import webbrowser
-import threading
 import os
 
 app = Flask(__name__)
@@ -32,7 +29,7 @@ def login():
         try:
             conn = conectar_bd()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Usuarios WHERE nombre = ? AND contrasena = ?", (usuario, contrasena))
+            cursor.execute("SELECT * FROM Usuarios WHERE nombre = %s AND contrasena = %s", (usuario, contrasena))
             if cursor.fetchone():
                 session["usuario"] = usuario
                 return redirect(url_for("menu"))
@@ -49,7 +46,6 @@ def menu():
     return render_template("menu.html")
 
 #############################################################
-# Búsqueda de clientes (CORREGIDA)
 @app.route("/buscar_clientes")
 def buscar_clientes():
     query = request.args.get("q", "").strip()
@@ -61,7 +57,7 @@ def buscar_clientes():
     sql = """
         SELECT id_cliente, nombre, apellidos, ruc, direccion, razon_social
         FROM clientes
-        WHERE nombre LIKE ? OR apellidos LIKE ? OR ruc LIKE ?
+        WHERE nombre LIKE %s OR apellidos LIKE %s OR ruc LIKE %s
     """
     like_query = f"%{query}%"
     cursor.execute(sql, (like_query, like_query, like_query))
@@ -79,7 +75,6 @@ def buscar_clientes():
     return jsonify(resultados)
 
 #############################################################
-# Venta
 @app.route("/venta", methods=["GET", "POST"])
 def venta():
     if "usuario" not in session:
@@ -94,7 +89,7 @@ def venta():
     if request.method == "POST":
         if "buscar_cliente" in request.form:
             id_cliente = request.form.get("cod_cliente")
-            cursor.execute("SELECT * FROM clientes WHERE id_cliente = ?", (id_cliente,))
+            cursor.execute("SELECT * FROM clientes WHERE id_cliente = %s", (id_cliente,))
             row = cursor.fetchone()
             if row:
                 cliente = {
@@ -109,7 +104,7 @@ def venta():
             cantidad = int(request.form["cantidad"])
             precio_unitario = float(request.form["precio"])
             nombre = ""
-            cursor.execute("SELECT nombre FROM productos WHERE id_producto = ?", (producto_id,))
+            cursor.execute("SELECT nombre FROM productos WHERE id_producto = %s", (producto_id,))
             row = cursor.fetchone()
             if row:
                 nombre = row[0]
@@ -134,15 +129,14 @@ def venta():
             total = sum(item["subtotal"] for item in carrito) * 1.18
             fecha_actual = datetime.now().strftime("%Y-%m-%d")
 
-            cursor.execute("INSERT INTO ventas (fecha, total, id_usuario, id_cliente) VALUES (?, ?, ?, ?)",
+            cursor.execute("INSERT INTO ventas (fecha, total, id_usuario, id_cliente) VALUES (%s, %s, %s, %s)",
                            (fecha_actual, total, id_usuario, id_cliente))
-            cursor.execute("SELECT SCOPE_IDENTITY()")
-            id_venta = cursor.fetchone()[0]
+            id_venta = cursor.lastrowid
 
             for item in carrito:
                 cursor.execute("""
                     INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario)
-                    VALUES (?, ?, ?, ?)
+                    VALUES (%s, %s, %s, %s)
                 """, (id_venta, item["id_producto"], item["cantidad"], item["precio_unitario"]))
 
             conn.commit()
@@ -156,7 +150,7 @@ def venta():
             ruc = request.form.get('ruc', '').strip()
 
             if not nombre or not apellidos or not ruc:
-                flash("⚠️ Nombre, Apellidos y RUC son obligatorios.")
+                flash("\u26a0\ufe0f Nombre, Apellidos y RUC son obligatorios.")
                 return redirect(url_for("venta"))
             
             direccion = request.form.get('direccion') or None
@@ -166,11 +160,11 @@ def venta():
             
             cursor.execute("""
                 INSERT INTO clientes (nombre, apellidos, ruc, direccion, razon_social, telefono, correo)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (nombre, apellidos, ruc, direccion, razon_social, telefono, correo))
             conn.commit()
 
-            cursor.execute("SELECT TOP 1 * FROM clientes WHERE ruc = ? ORDER BY id_cliente DESC", ruc)
+            cursor.execute("SELECT * FROM clientes WHERE ruc = %s ORDER BY id_cliente DESC LIMIT 1", (ruc,))
             row = cursor.fetchone()
             if row:
                 cliente = {
@@ -181,7 +175,7 @@ def venta():
                     "direccion": row[4],
                     "razon_social": row[5]
                 }
-            flash("✅ Cliente registrado correctamente.")
+            flash("\u2705 Cliente registrado correctamente.")
 
     cursor.execute("SELECT id_producto, nombre, '', precio_unitario FROM productos")
     productos = cursor.fetchall()
@@ -207,17 +201,17 @@ def modificar_cliente():
         cursor = conn.cursor()
 
         if 'razon' not in request.form:
-            cursor.execute('SELECT * FROM clientes WHERE nombre = ? AND apellidos = ?', (nombre, apellidos))
+            cursor.execute('SELECT * FROM clientes WHERE nombre = %s AND apellidos = %s', (nombre, apellidos))
             cliente = dictfetchone(cursor)
         else:
             cursor.execute('''
                 UPDATE clientes SET
-                    razon_social = ?,
-                    ruc = ?,
-                    direccion = ?,
-                    telefono = ?,
-                    correo = ?
-                WHERE nombre = ? AND apellidos = ?
+                    razon_social = %s,
+                    ruc = %s,
+                    direccion = %s,
+                    telefono = %s,
+                    correo = %s
+                WHERE nombre = %s AND apellidos = %s
             ''', (
                 request.form['razon'],
                 request.form['ruc'],
@@ -228,7 +222,7 @@ def modificar_cliente():
                 apellidos
             ))
             conn.commit()
-            flash("✅ Cliente actualizado correctamente.")
+            flash("\u2705 Cliente actualizado correctamente.")
             return redirect(url_for("modificar_cliente"))
 
         cursor.close()
@@ -241,11 +235,3 @@ def modificar_cliente():
 def logout():
     session.clear()
     return redirect(url_for("login"))
-
-def abrir_navegador():
-    webbrowser.open_new("http://127.0.0.1:5000/")
-
-if __name__ == "__main__":
-    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        threading.Timer(1, abrir_navegador).start()
-    app.run(debug=True)
